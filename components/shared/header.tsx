@@ -35,7 +35,7 @@ const Header = () => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Link href="/signin">
+            <Link href="/sign-in">
               <Button variant="outline" size="sm">
                 <User className="w-4 h-4" />
                 Sign In
