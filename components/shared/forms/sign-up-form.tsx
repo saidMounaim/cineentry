@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
-import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,43 +17,49 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { SignInSchema } from "@/lib/validations";
+import { SignUpSchema } from "@/lib/validations";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 
-type FormData = z.infer<typeof SignInSchema>;
+type FormData = z.infer<typeof SignUpSchema>;
 
-const SignInForm = () => {
+const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({
-    resolver: zodResolver(SignInSchema),
+    resolver: zodResolver(SignUpSchema),
     defaultValues: {
+      fullName: "",
       email: "",
       password: "",
-      rememberMe: false,
+      confirmPassword: "",
     },
   });
 
   const onSubmit = async (values: FormData) => {
     setIsLoading(true);
     try {
-      await authClient.signIn.email(
+      await authClient.signUp.email(
         {
+          name: values.fullName,
           email: values.email,
           password: values.password,
         },
         {
           onSuccess: () => {
-            toast.success("Signed in successfully.");
+            toast.success("Account created successfully.");
             setTimeout(() => {
               window.location.href = "/";
             }, 2000);
           },
-          onError: () => {
-            toast.error("Invalid email or password.");
+          onError: (err: unknown) => {
+            const message =
+              typeof err === "object" && err && "message" in err
+                ? (err as { message?: string }).message
+                : undefined;
+            toast.error(message || "Could not sign up.");
           },
         }
       );
@@ -67,6 +73,27 @@ const SignInForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="fullName"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Full Name</FormLabel>
+              <div className="relative">
+                <User className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Enter your full name"
+                    className="pl-10 bg-background/50"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </div>
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
@@ -88,7 +115,6 @@ const SignInForm = () => {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="password"
@@ -121,46 +147,50 @@ const SignInForm = () => {
             </FormItem>
           )}
         />
-
-        <div className="flex items-center justify-between">
-          <FormField
-            control={form.control}
-            name="rememberMe"
-            render={({ field }) => (
-              <FormItem className="flex items-center space-x-2">
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Confirm Password</FormLabel>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                 <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm your password"
+                    className="pl-10 pr-10 bg-background/50"
+                    {...field}
                   />
                 </FormControl>
-                <FormLabel className="text-sm font-normal">
-                  Remember me
-                </FormLabel>
-              </FormItem>
-            )}
-          />
-          <Link
-            href="/forgot-password"
-            className="text-sm text-primary hover:underline"
-          >
-            Forgot password?
-          </Link>
-        </div>
-
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+                <FormMessage />
+              </div>
+            </FormItem>
+          )}
+        />
         <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
-          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign Up"}
         </Button>
-
         <div className="text-center">
           <span className="text-muted-foreground">
-            Don&apos;t have an account?{" "}
+            Already have an account?{" "}
           </span>
           <Link
-            href="/sign-up"
+            href="/sign-in"
             className="text-primary hover:underline font-medium"
           >
-            Sign up
+            Sign in
           </Link>
         </div>
       </form>
@@ -168,4 +198,4 @@ const SignInForm = () => {
   );
 };
 
-export default SignInForm;
+export default SignUpForm;
