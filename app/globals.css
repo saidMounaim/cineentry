@@ -1,42 +1,137 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@media (prefers-color-scheme: dark) {
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Cinema-inspired color palette */
+    --background: 220 15% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 220 15% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 15% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Golden ticket accent */
+    --primary: 45 100% 62%;
+    --primary-foreground: 220 15% 8%;
+
+    /* Deep red cinema seats */
+    --secondary: 0 65% 55%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* Subtle grays */
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 10% 65%;
+
+    /* Electric blue accent */
+    --accent: 200 100% 65%;
+    --accent-foreground: 220 15% 8%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 16%;
+    --ring: 45 100% 62%;
+
+    --radius: 0.75rem;
+
+    /* Custom cinema gradients */
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(45 100% 62%),
+      hsl(35 100% 58%)
+    );
+    --gradient-hero: linear-gradient(135deg, hsl(220 15% 8%), hsl(220 25% 15%));
+    --gradient-card: linear-gradient(
+      135deg,
+      hsl(220 15% 12%),
+      hsl(220 20% 16%)
+    );
+    --gradient-accent: linear-gradient(
+      135deg,
+      hsl(200 100% 65%),
+      hsl(210 100% 60%)
+    );
+
+    /* Elegant shadows */
+    --shadow-elegant: 0 20px 40px -10px hsl(220 15% 4% / 0.4);
+    --shadow-glow: 0 0 30px hsl(45 100% 62% / 0.3);
+    --shadow-card: 0 8px 32px hsl(220 15% 4% / 0.3);
+
+    /* Smooth transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+@layer base {
+  * {
+    @apply border-border;
+  }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+  body {
+    @apply bg-background text-foreground;
   }
 }
