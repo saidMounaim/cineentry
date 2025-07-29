@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import React from "react";
-import { Button } from "../ui/button";
 import { Film, User } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import UserDropdown from "../user/user-dropdown";
+import { Button } from "@/components/ui/button";
 
 const Header = () => {
+  const { data: session } = authClient.useSession();
+
   const pathname = usePathname();
 
   const isActive = (path: string) => {
@@ -35,12 +39,16 @@ const Header = () => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Link href="/sign-in">
-              <Button variant="outline" size="sm">
-                <User className="w-4 h-4" />
-                Sign In
-              </Button>
-            </Link>
+            {session ? (
+              <UserDropdown />
+            ) : (
+              <Link href="/sign-in">
+                <Button variant="outline" size="sm">
+                  <User className="w-4 h-4" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

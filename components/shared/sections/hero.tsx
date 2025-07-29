@@ -13,7 +13,7 @@ const Hero = () => {
             Premium Cinema Experience
           </Badge>
           <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
-            CineMax
+            Cineentry
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
             Discover the latest blockbusters and book your perfect cinema
