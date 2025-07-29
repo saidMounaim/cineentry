@@ -1,11 +1,11 @@
 "use client";
 
-import * as React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,11 +19,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SignInSchema } from "@/lib/validations";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 type FormData = z.infer<typeof SignInSchema>;
 
 const SignInForm = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(SignInSchema),
@@ -34,13 +37,34 @@ const SignInForm = () => {
     },
   });
 
-  const onSubmit = form.handleSubmit((data) => {
-    console.log(data);
-  });
+  const onSubmit = async (values: FormData) => {
+    setIsLoading(true);
+    try {
+      await authClient.signIn.email(
+        {
+          email: values.email,
+          password: values.password,
+          callbackURL: "/",
+        },
+        {
+          onSuccess: () => {
+            window.location.href = "/";
+          },
+          onError: () => {
+            toast.error("Invalid email or password.");
+          },
+        }
+      );
+    } catch {
+      toast.error("Something went wrong.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="email"
@@ -122,8 +146,8 @@ const SignInForm = () => {
           </Link>
         </div>
 
-        <Button type="submit" className="w-full" size="lg">
-          Sign In
+        <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
         </Button>
 
         <div className="text-center">
