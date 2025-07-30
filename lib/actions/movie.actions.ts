@@ -64,3 +64,13 @@ export const createMovie = async (formData: FormData) => {
     movie,
   };
 };
+
+export const getNowShowingMovies = async () => {
+  const movies = await prisma.movie.findMany({
+    orderBy: {
+      releaseDate: "desc",
+    },
+  });
+
+  return movies;
+};
