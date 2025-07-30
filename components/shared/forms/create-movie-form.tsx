@@ -52,6 +52,7 @@ type CreateMovieFormData = z.infer<typeof CreateMovieSchema>;
 
 const CreateMovieForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [posterFile, setPosterFile] = useState<File | null>(null);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof CreateMovieSchema>>({
@@ -76,7 +77,7 @@ const CreateMovieForm = () => {
     formData.append("duration", values.duration);
     formData.append("director", values.director);
     formData.append("releaseDate", values.releaseDate.toDateString());
-    formData.append("poster", values.poster?.name || "");
+    formData.append("poster", posterFile || "");
 
     try {
       const response = await createMovie(formData);
@@ -227,7 +228,10 @@ const CreateMovieForm = () => {
                 <Input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => field.onChange(e.target.files?.[0])}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    setPosterFile(file || null);
+                  }}
                 />
               </FormControl>
               <FormMessage />

@@ -5,6 +5,7 @@ import { prisma } from "../prisma";
 import { CreateMovieSchema } from "../validations";
 import { headers } from "next/headers";
 import { auth } from "../auth";
+import { uploadToImageKit } from "../upload";
 
 export const createMovie = async (formData: FormData) => {
   const session = await auth.api.getSession({
@@ -37,6 +38,11 @@ export const createMovie = async (formData: FormData) => {
   const { title, description, genre, duration, director, releaseDate, poster } =
     validatedFields.data;
 
+  let posterUrl = "";
+  if (poster && typeof poster !== "string") {
+    posterUrl = await uploadToImageKit(poster);
+  }
+
   const movie = await prisma.movie.create({
     data: {
       title,
@@ -45,7 +51,7 @@ export const createMovie = async (formData: FormData) => {
       duration,
       director,
       releaseDate,
-      posterUrl: poster,
+      posterUrl: posterUrl || undefined,
       userId: session.user.id,
     },
   });
