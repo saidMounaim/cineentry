@@ -55,7 +55,7 @@ const CreateMovieForm = () => {
   const [posterFile, setPosterFile] = useState<File | null>(null);
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof CreateMovieSchema>>({
+  const form = useForm<CreateMovieFormData>({
     resolver: zodResolver(CreateMovieSchema),
     defaultValues: {
       title: "",

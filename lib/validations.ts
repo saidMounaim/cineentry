@@ -29,5 +29,15 @@ export const CreateMovieSchema = z.object({
     .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
       message: "Release date is required",
     }),
-  poster: z.any().optional(), // File input
+  poster: z.any().optional(),
+});
+
+export const CreateShowSchema = z.object({
+  movieId: z.string().min(1, "Movie is required"),
+  totalSeats: z.coerce.number().min(1, "Total seats is required"),
+  date: z.date().refine((val) => val instanceof Date && !isNaN(val.getTime()), {
+    message: "Release date is required",
+  }),
+  time: z.string().min(1, "Time is required"),
+  price: z.coerce.number().min(1, "Price is required"),
 });
