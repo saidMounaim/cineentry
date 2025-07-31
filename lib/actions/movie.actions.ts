@@ -74,3 +74,11 @@ export const getNowShowingMovies = async () => {
 
   return movies;
 };
+
+export const getMovieById = async (id: string) => {
+  const movie = await prisma.movie.findUnique({
+    where: { id },
+  });
+
+  return movie;
+};
