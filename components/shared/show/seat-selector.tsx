@@ -5,6 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateSeats, cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { usePathname } from "next/navigation";
+import { bookTicket } from "@/lib/actions/ticket.actions";
 
 type Seat = {
   id: string;
@@ -15,15 +18,28 @@ type Seat = {
 };
 
 export default function SeatSelector({
+  showId,
   totalSeats,
   price,
+  reservedSeats = [],
 }: {
+  showId: string;
   totalSeats: number;
   price: number;
+  reservedSeats?: string[];
 }) {
-  const [seats, setSeats] = useState<Seat[]>(generateSeats(totalSeats));
+  const pathname = usePathname();
+  const initialSeats = generateSeats(totalSeats).map((seat) => ({
+    ...seat,
+    isAvailable: !reservedSeats.includes(seat.id),
+  }));
+
+  const [loading, setLoading] = useState(false);
+  const [seats, setSeats] = useState<Seat[]>(initialSeats);
   const selectedSeats = seats.filter((seat) => seat.isSelected);
   const totalPrice = selectedSeats.length * price;
+
+  console.log(selectedSeats);
 
   const handleSeatClick = (seatId: string) => {
     setSeats((prev) =>
@@ -35,10 +51,40 @@ export default function SeatSelector({
     );
   };
 
-  const handleBooking = () => {};
+  const handleBooking = async () => {
+    setLoading(true);
+    try {
+      if (selectedSeats.length === 0)
+        toast.error("Please select at least one seat");
+      else {
+        const response = await bookTicket(
+          showId,
+          selectedSeats.map((seat) => seat.id),
+          pathname
+        );
+        if (!response.success) {
+          toast.error(response.message || "Failed to book tickets");
+          return;
+        }
+        toast.success("Tickets booked successfully!");
+        setSeats((prev) =>
+          prev.map((seat) =>
+            seat.isSelected
+              ? { ...seat, isAvailable: false, isSelected: false }
+              : seat
+          )
+        );
+      }
+    } catch (error) {
+      toast.error("An error occurred while booking tickets");
+      console.error("Booking error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   function getSeatColor(seat: Seat) {
-    if (!seat.isAvailable) return "bg-gray-300 border-gray-400";
+    if (!seat.isAvailable) return "bg-gray-500 border-gray-400";
     if (seat.isSelected) return "bg-primary text-white border-primary";
     return "bg-white border-gray-300";
   }
@@ -114,7 +160,7 @@ export default function SeatSelector({
             onClick={handleBooking}
             className="w-full"
             size="lg"
-            disabled={selectedSeats.length === 0}
+            disabled={selectedSeats.length === 0 || loading}
           >
             <DollarSign className="w-4 h-4 mr-2" />
             Book {selectedSeats.length} Ticket

@@ -1,7 +1,10 @@
 import SeatSelector from "@/components/shared/show/seat-selector";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getShowByMovieId } from "@/lib/actions/show.actions";
+import {
+  getAllSeatsReserved,
+  getShowByMovieId,
+} from "@/lib/actions/show.actions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Calendar, Clock, CreditCard } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -20,6 +23,8 @@ export default async function BookTicketPage({
 
   const totalSeats = show.totalSeats || 0;
 
+  const reservedSeats = await getAllSeatsReserved(show.id);
+
   return (
     <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -28,6 +33,8 @@ export default async function BookTicketPage({
             <SeatSelector
               totalSeats={totalSeats}
               price={show.ticketPrice || 15}
+              showId={show.id}
+              reservedSeats={reservedSeats.flat()}
             />
           </div>
 
@@ -40,7 +47,6 @@ export default async function BookTicketPage({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Movie Info */}
                 <div className="space-y-3">
                   <img
                     src={show.movie.posterUrl || ""}

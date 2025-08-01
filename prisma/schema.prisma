@@ -55,6 +55,7 @@ model User {
   session       Session[]
   
   movies        Movie[]
+  tickets       Ticket[]
 }
 
 model Verification {
@@ -96,4 +97,20 @@ model Show {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  tickets     Ticket[]
+}
+
+model Ticket {
+  id        String   @id @default(cuid())
+  show      Show     @relation(fields: [showId], references: [id])
+  showId    String
+  seatNumber String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  price     Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { CreateShowSchema } from "../validations";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+import { auth } from "../auth";
 
 export const createShow = async (formData: FormData) => {
   const validatedFields = CreateShowSchema.safeParse({
@@ -52,4 +54,13 @@ export const getShowByMovieId = async (movieId: string) => {
   });
 
   return show;
+};
+
+export const getAllSeatsReserved = async (showId: string) => {
+  const tickets = await prisma.ticket.findMany({
+    where: { showId },
+    select: { seatNumber: true },
+  });
+
+  return tickets.map((ticket) => JSON.parse(ticket.seatNumber));
 };
