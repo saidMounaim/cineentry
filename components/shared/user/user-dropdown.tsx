@@ -11,7 +11,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { LogOut, LayoutDashboard, Info, Plus, Theater } from "lucide-react";
+import { LogOut, LayoutDashboard, Plus, Theater, Ticket } from "lucide-react";
 import { getUserInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
@@ -51,7 +51,7 @@ const UserDropdown = () => {
           </div>
         </div>
         <DropdownMenuSeparator className="bg-primary" />
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <Link
             href="/dashboard"
             className="flex items-center hover:!bg-transparent text-gray-900 cursor-pointer"
@@ -59,14 +59,14 @@ const UserDropdown = () => {
             <LayoutDashboard className="mr-2 h-4 w-4" />
             Dashboard
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem asChild>
           <Link
-            href="/my-orders"
+            href="/my-tickets"
             className="flex items-center hover:!bg-transparent text-gray-900 cursor-pointer"
           >
-            <Info className="mr-2 h-4 w-4" />
-            My Orders
+            <Ticket className="mr-2 h-4 w-4" />
+            My Tickets
           </Link>
         </DropdownMenuItem>
         {session?.user?.role === "admin" && (

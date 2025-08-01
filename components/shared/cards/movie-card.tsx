@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface MovieCardProps {
   id: string;
@@ -24,13 +25,16 @@ const MovieCard = ({
   return (
     <Card className="group overflow-hidden bg-gradient-card border-border hover:shadow-elegant transition-all duration-300 hover:scale-[1.02]">
       <div className="relative overflow-hidden">
-        {posterUrl && (
-          <img
-            src={posterUrl}
-            alt={title}
-            className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-110"
-          />
-        )}
+        <div className="w-full h-80 relative bg-primary">
+          {posterUrl && (
+            <Image
+              src={posterUrl}
+              alt={title}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              fill
+            />
+          )}
+        </div>
         <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <Badge className="absolute top-4 left-4 bg-gradient-primary text-primary-foreground capitalize">
           {genre}

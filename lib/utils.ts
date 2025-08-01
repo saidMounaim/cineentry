@@ -40,7 +40,8 @@ export async function downloadTicketPDF(orderId: string) {
     return;
   }
 
-  const totalAmount = order.price * order.seatNumber.length;
+  const totalAmount =
+    order.show.ticketPrice * JSON.parse(order.seatNumber).length;
 
   const ticketContent = `
 CINEENTRY TICKET

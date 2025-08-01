@@ -40,7 +40,7 @@ const ButtonDeleteTicket = ({ orderId }: { orderId: string }) => {
       disabled={loading}
     >
       <Trash className="w-4 h-4" />
-      Delete order
+      Delete ticket
     </Button>
   );
 };

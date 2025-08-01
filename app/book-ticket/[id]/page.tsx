@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAllSeatsReserved, getShowById } from "@/lib/actions/show.actions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Calendar, Clock, CreditCard } from "lucide-react";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export default async function BookTicketPage({
@@ -45,11 +46,14 @@ export default async function BookTicketPage({
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-3">
-                  <img
-                    src={show.movie.posterUrl || ""}
-                    alt={show.movie.title}
-                    className="w-full h-32 object-cover rounded-lg"
-                  />
+                  <div className="w-full h-32 relative">
+                    <Image
+                      src={show.movie.posterUrl || ""}
+                      alt={show.movie.title}
+                      className="w-full h-full object-cover rounded-lg object-top"
+                      fill
+                    />
+                  </div>
                   <div>
                     <h3 className="font-semibold text-lg">
                       {show.movie.title}

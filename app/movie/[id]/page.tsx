@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getMovieById } from "@/lib/actions/movie.actions";
 import { getShowsByMovieId } from "@/lib/actions/show.actions";
 import { Calendar, Clock, DollarSign, MapPin, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -27,11 +28,16 @@ export default async function MovieDetailsPage({
           <div className="lg:col-span-1">
             <div className="sticky top-24">
               <Card className="overflow-hidden bg-gradient-card border-border shadow-elegant">
-                <img
-                  src={movie.posterUrl || ""}
-                  alt={movie.title}
-                  className="w-full h-auto object-cover"
-                />
+                <div className="w-full h-96 relative bg-primary">
+                  {movie.posterUrl && (
+                    <Image
+                      src={movie.posterUrl}
+                      alt={movie.title}
+                      className="w-full h-full object-cover object-top"
+                      fill
+                    />
+                  )}
+                </div>
               </Card>
             </div>
           </div>

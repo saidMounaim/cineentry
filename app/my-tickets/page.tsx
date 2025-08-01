@@ -14,6 +14,7 @@ import { getAllBookedTicketsByUserId } from "@/lib/actions/ticket.actions";
 import { auth } from "@/lib/auth";
 import { ArrowLeft, Calendar, Clock, Ticket } from "lucide-react";
 import { headers } from "next/headers";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -43,7 +44,7 @@ const MyOrders = async () => {
             </Link>
             <div>
               <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                My Orders
+                My Tickets
               </h1>
               <p className="text-muted-foreground mt-2">
                 View and manage your movie ticket bookings
@@ -56,7 +57,7 @@ const MyOrders = async () => {
           <Card className="text-center py-12">
             <CardContent>
               <Ticket className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No orders found</h3>
+              <h3 className="text-xl font-semibold mb-2">No tickets found</h3>
               <p className="text-muted-foreground mb-6">
                 {"You haven't booked any tickets yet. Start exploring movies!"}
               </p>
@@ -68,6 +69,8 @@ const MyOrders = async () => {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => {
+              const totalAmount =
+                order.show.ticketPrice * JSON.parse(order.seatNumber).length;
               return (
                 <Card
                   key={order.id}
@@ -78,7 +81,7 @@ const MyOrders = async () => {
                       <div className="flex items-center space-x-4">
                         <div>
                           <CardTitle className="flex items-center space-x-2">
-                            <span>Order #{order.id}</span>
+                            <span>Ticket #{order.id}</span>
                           </CardTitle>
                           <p className="text-sm text-muted-foreground mt-1">
                             Booked on{" "}
@@ -96,12 +99,14 @@ const MyOrders = async () => {
                   <CardContent className="p-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="flex space-x-4">
-                        <img
-                          src={order.show.movie?.posterUrl || ""}
-                          alt={order.show.movie?.title}
-                          className="w-20 h-28 object-cover rounded-lg shadow-card"
-                        />
-
+                        <div className="w-20 h-28 relative">
+                          <Image
+                            src={order.show.movie?.posterUrl || ""}
+                            alt={order.show.movie?.title}
+                            className="w-full h-full object-cover rounded-lg shadow-card"
+                            fill
+                          />
+                        </div>
                         <div className="flex-1">
                           <h3 className="font-semibold text-lg mb-2">
                             {order.show.movie?.title}
@@ -140,7 +145,7 @@ const MyOrders = async () => {
                                 </div>
                               </TableCell>
                               <TableCell className="font-semibold">
-                                ${order.price * order.seatNumber.length}
+                                ${totalAmount.toFixed(2)}
                               </TableCell>
                             </TableRow>
                           </TableBody>
