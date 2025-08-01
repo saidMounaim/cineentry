@@ -53,12 +53,7 @@ const MovieCard = ({
 
           <div className="flex space-x-2">
             <Link href={`/movie/${id}`}>
-              <Button variant="outline" size="sm">
-                Details
-              </Button>
-            </Link>
-            <Link href={`/book-ticket/${id}`}>
-              <Button size="sm">Book Now</Button>
+              <Button size="sm">Details</Button>
             </Link>
           </div>
         </div>

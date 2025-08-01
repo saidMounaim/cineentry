@@ -24,7 +24,7 @@ const MyOrders = async () => {
   });
 
   if (!session?.user?.id) {
-    redirect("/login");
+    redirect("/sign-in");
   }
 
   const orders = await getAllBookedTicketsByUserId(session.user.id);

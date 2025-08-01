@@ -17,7 +17,7 @@ const CreateMoviePage = async () => {
     headers: await headers(),
   });
 
-  if (!session) {
+  if (!session || session.user.role !== "admin") {
     redirect("/sign-in");
   }
 

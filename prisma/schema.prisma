@@ -29,18 +29,23 @@ model Account {
   createdAt             DateTime
   updatedAt             DateTime
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String   @unique
-  createdAt DateTime
-  updatedAt DateTime
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime
+  updatedAt      DateTime
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy String?
+
+  @@map("session")
 }
 
 model User {
@@ -51,11 +56,16 @@ model User {
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
-  account       Account[]
-  session       Session[]
-  
   movies        Movie[]
   tickets       Ticket[]
+  role          String?
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
 }
 
 model Verification {
@@ -65,6 +75,8 @@ model Verification {
   expiresAt  DateTime
   createdAt  DateTime?
   updatedAt  DateTime?
+
+  @@map("verification")
 }
 
 model Movie {
@@ -77,10 +89,10 @@ model Movie {
   releaseDate DateTime
   posterUrl   String?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
   userId String
 
   show Show[]
@@ -95,21 +107,21 @@ model Show {
   showTime    String
   ticketPrice Float
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  tickets     Ticket[]
+  tickets Ticket[]
 }
 
 model Ticket {
-  id        String   @id @default(cuid())
-  show      Show     @relation(fields: [showId], references: [id])
-  showId    String
+  id         String @id @default(cuid())
+  show       Show   @relation(fields: [showId], references: [id])
+  showId     String
   seatNumber String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
+  user       User   @relation(fields: [userId], references: [id])
+  userId     String
 
-  price     Float
+  price Float
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

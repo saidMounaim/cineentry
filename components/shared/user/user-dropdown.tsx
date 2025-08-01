@@ -11,7 +11,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { LogOut, LayoutDashboard, Info } from "lucide-react";
+import { LogOut, LayoutDashboard, Info, Plus, Theater } from "lucide-react";
 import { getUserInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
@@ -69,6 +69,28 @@ const UserDropdown = () => {
             My Orders
           </Link>
         </DropdownMenuItem>
+        {session?.user?.role === "admin" && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link
+                href="/create-movie"
+                className="flex items-center hover:!bg-transparent text-gray-900 cursor-pointer"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Create movie
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href="/create-show"
+                className="flex items-center hover:!bg-transparent text-gray-900 cursor-pointer"
+              >
+                <Theater className="mr-2 h-4 w-4" />
+                Create show
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator className="bg-primary" />
         <DropdownMenuItem
           className="flex items-center text-red-600 focus:text-red-600 hover:!bg-transparent cursor-pointer"

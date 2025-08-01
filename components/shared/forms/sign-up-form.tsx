@@ -52,7 +52,7 @@ const SignUpForm = () => {
             toast.success("Account created successfully.");
             setTimeout(() => {
               window.location.href = "/";
-            }, 2000);
+            }, 300);
           },
           onError: (err: unknown) => {
             const message =

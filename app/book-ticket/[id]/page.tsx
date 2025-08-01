@@ -1,10 +1,7 @@
 import SeatSelector from "@/components/shared/show/seat-selector";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  getAllSeatsReserved,
-  getShowByMovieId,
-} from "@/lib/actions/show.actions";
+import { getAllSeatsReserved, getShowById } from "@/lib/actions/show.actions";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Calendar, Clock, CreditCard } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -15,7 +12,7 @@ export default async function BookTicketPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const show = await getShowByMovieId(id);
+  const show = await getShowById(id);
 
   if (!show) {
     return notFound();

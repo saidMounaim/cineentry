@@ -1,8 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { getMovieById } from "@/lib/actions/movie.actions";
-import { Calendar, Clock, User } from "lucide-react";
+import { getShowsByMovieId } from "@/lib/actions/show.actions";
+import { Calendar, Clock, DollarSign, MapPin, User } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -13,6 +14,7 @@ export default async function MovieDetailsPage({
 }) {
   const { id } = await params;
   const movie = await getMovieById(id);
+  const movieShows = movie ? await getShowsByMovieId(movie.id) : [];
 
   if (!movie) {
     return notFound();
@@ -65,14 +67,69 @@ export default async function MovieDetailsPage({
                 {movie.description}
               </p>
             </div>
-
-            <Link href={`/book-ticket/${movie.id}`}>
-              <Button size="lg" className="w-full md:w-auto">
-                Book Tickets Now
-              </Button>
-            </Link>
           </div>
         </div>
+
+        {/* Show Times */}
+        <Card className="bg-gradient-card border-border shadow-card">
+          <CardContent className="p-6">
+            <h2 className="text-2xl font-bold mb-6">Available Shows</h2>
+
+            {movieShows.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">
+                  No shows scheduled for this movie yet.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {movieShows.map((show) => {
+                  return (
+                    <Card
+                      key={show.id}
+                      className="bg-background/50 border-border hover:shadow-card transition-all duration-300"
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between space-y-3 md:space-y-0">
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-2">
+                              <MapPin className="w-4 h-4 text-primary" />
+                              <span className="font-semibold">Cineentry</span>
+                            </div>
+                            <div className="flex items-center space-x-4 text-sm">
+                              <div className="flex items-center space-x-1">
+                                <Calendar className="w-4 h-4" />
+                                <span>{show.showDate.toDateString()}</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <Clock className="w-4 h-4" />
+                                <span>{show.showTime}</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <DollarSign className="w-4 h-4" />
+                                <span>${show.ticketPrice}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="text-right space-y-2">
+                            <p className="text-sm text-muted-foreground">
+                              {show.availableSeats} of {show.totalSeats} seats
+                              available
+                            </p>
+                            <Link href={`/book-ticket/${show.id}`}>
+                              <Button variant="outline">Book Now</Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

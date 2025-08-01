@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Film, Star, TrendingUp } from "lucide-react";
+import { Star } from "lucide-react";
 import React from "react";
 
 const Hero = () => {
@@ -19,16 +18,6 @@ const Hero = () => {
             Discover the latest blockbusters and book your perfect cinema
             experience with premium comfort and state-of-the-art technology.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="hero" className="text-lg">
-              <Film className="w-5 h-5 mr-2" />
-              Explore Movies
-            </Button>
-            <Button size="lg" variant="outline" className="text-lg">
-              <TrendingUp className="w-5 h-5 mr-2" />
-              Trending Now
-            </Button>
-          </div>
         </div>
       </div>
     </section>

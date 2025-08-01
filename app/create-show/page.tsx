@@ -8,8 +8,19 @@ import {
 import { Calendar as CalendarIcon2, Clock } from "lucide-react";
 import { getNowShowingMovies } from "@/lib/actions/movie.actions";
 import CreateShowForm from "@/components/shared/forms/create-show-form";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 const CreateShow = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session || session.user.role !== "admin") {
+    redirect("/sign-in");
+  }
+
   const movies = await getNowShowingMovies();
 
   return (

@@ -50,7 +50,7 @@ const SignInForm = () => {
             toast.success("Signed in successfully.");
             setTimeout(() => {
               window.location.href = "/";
-            }, 2000);
+            }, 300);
           },
           onError: () => {
             toast.error("Invalid email or password.");
