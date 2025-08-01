@@ -50,3 +50,72 @@ export const bookTicket = async (
     ticket,
   };
 };
+
+export const getAllBookedTicketsByUserId = async (userId: string) => {
+  const tickets = await prisma.ticket.findMany({
+    where: { userId },
+    include: {
+      show: {
+        include: {
+          movie: true,
+        },
+      },
+    },
+  });
+
+  return tickets;
+};
+
+export const getTicketById = async (ticketId: string) => {
+  const ticket = await prisma.ticket.findUnique({
+    where: { id: ticketId },
+    include: {
+      show: {
+        include: {
+          movie: true,
+        },
+      },
+    },
+  });
+
+  if (!ticket) {
+    return null;
+  }
+
+  return ticket;
+};
+
+export const deleteTicketById = async (ticketId: string) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user?.id) {
+    return {
+      success: false,
+      message: "You must be logged in to delete tickets",
+    };
+  }
+
+  const ticket = await prisma.ticket.findUnique({
+    where: { id: ticketId },
+  });
+
+  if (!ticket || ticket.userId !== session.user.id) {
+    return {
+      success: false,
+      message: "Ticket not found or you do not have permission to delete it",
+    };
+  }
+
+  await prisma.ticket.delete({
+    where: { id: ticketId },
+  });
+
+  revalidatePath("/my-orders");
+
+  return {
+    success: true,
+    message: "Ticket deleted successfully",
+  };
+};
