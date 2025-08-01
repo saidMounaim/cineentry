@@ -41,3 +41,15 @@ export const createShow = async (formData: FormData) => {
     show,
   };
 };
+
+export const getShowByMovieId = async (movieId: string) => {
+  const show = await prisma.show.findFirst({
+    where: { movieId },
+    orderBy: [{ showDate: "asc" }, { showTime: "asc" }],
+    include: {
+      movie: true,
+    },
+  });
+
+  return show;
+};

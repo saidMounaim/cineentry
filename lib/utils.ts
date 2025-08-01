@@ -15,3 +15,19 @@ export function getUserInitials(name: string = "") {
     return trimmedName.substring(0, 2);
   }
 }
+
+export function generateSeats(totalSeats: number) {
+  const seats = [];
+  const seatsPerRow = 12;
+  for (let i = 0; i < totalSeats; i++) {
+    const row = String.fromCharCode(65 + Math.floor(i / seatsPerRow));
+    seats.push({
+      id: `${row}${(i % seatsPerRow) + 1}`,
+      row,
+      number: (i % seatsPerRow) + 1,
+      isAvailable: true,
+      isSelected: false,
+    });
+  }
+  return seats;
+}
