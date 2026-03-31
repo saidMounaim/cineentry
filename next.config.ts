@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     domains: ["ik.imagekit.io"],
+    unoptimized: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
